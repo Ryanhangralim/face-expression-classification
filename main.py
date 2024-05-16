@@ -23,7 +23,6 @@ def main():
         # Preprocess input data
         # try:
             preprocessed_data = preprocess.preprocess(input_data)
-            print(preprocessed_data)
             # Get model predictions
 
             # Display predictions
