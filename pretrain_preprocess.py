@@ -123,9 +123,6 @@ if __name__ == "__main__":
             columns.append(name + "_" + ang)
     columns.append("label")
 
-    print(f"Columns: {columns}")
-    print(extracted_images)
-
       # Create the pandas DataFrame for GLCM features data
     glcm_df = pd.DataFrame(extracted_images, columns = columns)
 

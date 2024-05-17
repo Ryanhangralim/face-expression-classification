@@ -39,11 +39,11 @@ def main():
                 predictions = predict_class(preprocessed_data)
                 max_index = np.array(predictions[0]).argmax()
                 if max_index == 0:
-                    prediction_result = "Happy"
+                    prediction_result = "Happy (Positive)"
                 elif max_index == 1:
-                    prediction_result = "Neutral"
+                    prediction_result = "Neutral (Neutral)"
                 elif max_index == 2:
-                    prediction_result = "Sad"
+                    prediction_result = "Sad (Negative)"
 
                 # Append the result to the result list
                 pred_nump = predictions.numpy()
