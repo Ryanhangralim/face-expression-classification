@@ -14,6 +14,12 @@ properties = ['dissimilarity', 'correlation', 'homogeneity', 'contrast', 'ASM', 
 # Load the scaler
 scaler = joblib.load('scaler.joblib')
 
+#Adding exception class
+class AppError(Exception):
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
+
 # -------------------- GLCM functions ------------------------
 
 def calc_glcm_all_agls(img, props, dists, agls=[0, np.pi/4, np.pi/2, 3*np.pi/4], lvl=256, sym=True, norm=True):
@@ -32,8 +38,10 @@ def calc_glcm_all_agls(img, props, dists, agls=[0, np.pi/4, np.pi/2, 3*np.pi/4],
 # -------------------- Cropping function ------------------------
 
 def crop_and_extract_glcm(file, dists=[1], props=properties):
-    image = cv2.resize(file, (128, 128))
-
+    try:
+        image = cv2.resize(file, (128, 128))
+    except cv2.error:
+        raise AppError("3")
     # Convert the image to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
@@ -44,8 +52,7 @@ def crop_and_extract_glcm(file, dists=[1], props=properties):
     faces = detector(gray_equalized, 0)
 
     if len(faces) == 0:
-        print(f"No face detected in")
-        return None
+        raise AppError("2")
     else:
         for face in faces:
             # Predict facial landmarks for the detected face
@@ -101,9 +108,8 @@ def get_glcm_features(image_path):
         glcm_features = glcm_features.reshape(1, -1)  # Reshape for the scaler
         scaled_features = scaler.transform(glcm_features)
         return scaled_features
-        # return glcm_features
     else:
-        return None
+        raise AppError("4")
 
 def preprocess(uploaded_file):
     file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
@@ -113,6 +119,6 @@ def preprocess(uploaded_file):
         if features is not None and features.size > 0:
             return features
         else:
-            return None
+            raise AppError("5")
     else:
-        print("Error: Unable to decode or load the uploaded image.")
+        raise AppError("1")
